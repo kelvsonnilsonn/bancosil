@@ -4,7 +4,6 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Objects;
 
@@ -30,6 +29,10 @@ public class Address {
         this.country = Objects.requireNonNull(country, "País não pode ser nula");
     }
 
+    public static Address of(String city, String street, String zipcode, int number){
+        return new Address(city, street, zipcode, number);
+    }
+
     public Address changeCountry(String country){
         return new Address(this.city, this.street, this.zipcode.getZipcode(), this.number, country);
     }
@@ -39,7 +42,7 @@ public class Address {
     }
 
     private int validateNumber(int number) {
-        if (number <= 0) {
+        if (number < 0) {
             throw new IllegalArgumentException("Número deve ser positivo");
         }
         return number;
