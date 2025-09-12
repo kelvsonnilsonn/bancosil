@@ -1,36 +1,28 @@
 package com.github.bancosil.service;
 
 import com.github.bancosil.model.Account;
-import com.github.bancosil.service.validator.OperationValidator;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.bancosil.service.operation.Deposit;
+import com.github.bancosil.service.operation.Operation;
+import com.github.bancosil.service.operation.Withdraw;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-
-/**
- * Serviço onde ocorre as transferências, saques, depósitos, bla, bla e bla.
- * */
+import java.util.function.Supplier;
 
 @Service
-@Transactional
 public class OperationalService {
 
-    private final AccountService accountService;
-
-    public OperationalService(@Autowired AccountService accountService) {
-        this.accountService = accountService;
+    public BigDecimal withdraw(Account account, BigDecimal amount){
+        executeOperation(Withdraw::new, account, amount);
+        return amount;
     }
 
-    public BigDecimal withdraw(Long id, BigDecimal amount){
-        Account account = accountService.findById(id);
-        OperationValidator.validate(amount);
-        return account.withdraw(amount);
+    public void deposit(Account account, BigDecimal amount){
+        executeOperation(Deposit::new, account, amount);
     }
 
-    public void deposit(Long id, BigDecimal amount){
-        Account account = accountService.findById(id);
-        OperationValidator.validate(amount);
-        account.deposit(amount);
+    private void executeOperation(Supplier<Operation> operationSupplier, Account account, BigDecimal amount){
+        Operation operation = operationSupplier.get();
+        operation.execute(account, amount);
     }
 }
