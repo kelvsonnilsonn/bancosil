@@ -15,11 +15,10 @@ public class Password {
     private String password;
 
     public Password(String password){
-        Objects.requireNonNull(password);
-        this.password = password;
+        this.password = Objects.requireNonNull(password);;
     }
 
-    public Password of(String password){
+    public static Password of(String password){
         return new Password(password);
     }
 }

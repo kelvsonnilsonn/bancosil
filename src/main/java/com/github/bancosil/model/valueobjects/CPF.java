@@ -14,11 +14,10 @@ public class CPF {
     private String cpf;
 
     public CPF(String cpf){
-        Objects.requireNonNull(cpf);
-        this.cpf = cpf;
+        this.cpf = Objects.requireNonNull(cpf);
     }
 
-    public CPF of(String cpf){
+    public static CPF of(String cpf){
         return new CPF(cpf);
     }
 }

@@ -14,11 +14,10 @@ public class Email {
     private String email;
 
     public Email(String email){
-        Objects.requireNonNull(email);
-        this.email = email;
+        this.email = Objects.requireNonNull(email);;
     }
 
-    public Email of(String email){
+    public static Email of(String email){
         return new Email(email);
     }
 }

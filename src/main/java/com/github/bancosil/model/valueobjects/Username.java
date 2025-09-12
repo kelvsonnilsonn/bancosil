@@ -14,11 +14,10 @@ public class Username {
     private String username;
 
     public Username(String username){
-        Objects.requireNonNull(username);
-        this.username = username;
+        this.username = Objects.requireNonNull(username);;
     }
 
-    public Username of(String username){
+    public static Username of(String username){
         return new Username(username);
     }
 }

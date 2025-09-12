@@ -14,11 +14,10 @@ public class ZipCode {
     private String zipcode;
 
     public ZipCode(String zipcode){
-        Objects.requireNonNull(zipcode);
-        this.zipcode = zipcode;
+        this.zipcode = Objects.requireNonNull(zipcode);;
     }
 
-    public ZipCode of(String zipcode){
+    public static ZipCode of(String zipcode){
         return new ZipCode(zipcode);
     }
 }
