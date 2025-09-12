@@ -48,7 +48,7 @@ public abstract class Account {
     }
 
     public void selectAddress(String city, String street, String zipcode, int number){
-        this.address = Address.putAddress(city, street, zipcode, number);
+        this.address = Address.of(city, street, zipcode, number);
     }
 
     public BigDecimal withdraw(BigDecimal amount) {
