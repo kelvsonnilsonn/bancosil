@@ -2,6 +2,7 @@ package com.github.bancosil.service;
 
 import com.github.bancosil.model.Account;
 import com.github.bancosil.service.validator.OperationValidator;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
  * */
 
 @Service
+@Transactional
 public class OperationalService {
 
     private final AccountService accountService;
