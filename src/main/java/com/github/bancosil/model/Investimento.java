@@ -9,4 +9,7 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("investmento")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Investimento extends Account {
+    public Investimento(String name, String password, String email, String cpf) {
+        super(name, password, email, cpf);
+    }
 }

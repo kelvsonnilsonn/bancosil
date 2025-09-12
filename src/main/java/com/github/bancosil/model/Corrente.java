@@ -9,5 +9,8 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("Corrente")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Corrente extends Account {
+    public Corrente(String name, String password, String email, String cpf) {
+        super(name, password, email, cpf);
+    }
 }
 
