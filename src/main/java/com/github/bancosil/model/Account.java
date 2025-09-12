@@ -51,9 +51,8 @@ public abstract class Account {
         this.address = Address.of(city, street, zipcode, number);
     }
 
-    public BigDecimal withdraw(BigDecimal amount) {
+    public void withdraw(BigDecimal amount) {
         this.money = money.subtract(amount);
-        return amount;
     }
 
     public void deposit(BigDecimal amount) {
