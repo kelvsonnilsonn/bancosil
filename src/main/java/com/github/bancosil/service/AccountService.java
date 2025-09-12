@@ -1,5 +1,6 @@
 package com.github.bancosil.service;
 
+import com.github.bancosil.config.LoginSystem;
 import com.github.bancosil.exception.account.AccountNotFoundException;
 import com.github.bancosil.model.Account;
 import com.github.bancosil.repository.AccountRepository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public class AccountService {
+public class AccountService implements LoginSystem {
 
     @Autowired
     private AccountRepository accountDAO;
@@ -32,6 +33,16 @@ public class AccountService {
         Objects.requireNonNull(id, "O id não pode ser nulo.");
         return accountDAO.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException(id));
+    }
+
+    @Override
+    public Account login(String username, String password){
+        return accountDAO.findByUsernameAndPassword(username, password)
+                .orElseThrow(AccountNotFoundException::new);
+    }
+
+    public void update(Account account) {
+        accountDAO.save(account);
     }
 
 }
