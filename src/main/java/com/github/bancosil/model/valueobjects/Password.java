@@ -17,7 +17,7 @@ public class Password {
 
     private String password;
     private static final String PASSWORD_REGEX =
-            "^(?=.*\\d)(?=.*[A-Z])[a-zA-Z\\d]+$";
+            "^(?=.*\\d)(?=.*[A-Z])[a-zA-Z\\d!@#$%&_+*^~]+$";
             // Lookaheads (?=.*[algo]) não consomem caracteres. Eles só verificam uma condição!
 
     private static final Pattern pattern = Pattern.compile(PASSWORD_REGEX);
