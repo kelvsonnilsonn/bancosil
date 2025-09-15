@@ -11,4 +11,9 @@ public class Withdraw implements Operation{
         OperationValidator.validate(amount);
         account.withdraw(amount);
     }
+
+    @Override
+    public OperationType operationType() {
+        return OperationType.WITHDRAW;
+    }
 }
