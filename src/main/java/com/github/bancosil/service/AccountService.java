@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 @Service
@@ -41,8 +42,8 @@ public class AccountService implements LoginSystem {
                 .orElseThrow(AccountNotFoundException::new);
     }
 
-    public void update(Account account) {
-        accountDAO.save(account);
+    public void update(Account ...account) {
+        Arrays.stream(account).forEach(a -> accountDAO.save(a));
     }
 
 }
