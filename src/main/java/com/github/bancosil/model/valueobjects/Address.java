@@ -1,5 +1,6 @@
 package com.github.bancosil.model.valueobjects;
 
+import com.github.bancosil.model.valueobjects.zipcodechecker.ZipCode;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class Address {
     public Address(String city, String street, String zipcode, int number, String country){
         this.city = Objects.requireNonNull(city, "Cidade não pode ser nula");
         this.street = Objects.requireNonNull(street, "Rua não pode ser nula");
-        this.zipcode = new ZipCode(Objects.requireNonNull(zipcode, "CEP não pode ser nulo"));
+        this.zipcode = new ZipCode(zipcode);
         this.number = validateNumber(number);
         this.country = Objects.requireNonNull(country, "País não pode ser nula");
     }
