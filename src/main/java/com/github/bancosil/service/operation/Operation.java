@@ -4,6 +4,6 @@ import com.github.bancosil.model.Account;
 
 import java.math.BigDecimal;
 
-public interface Operation {
+public interface Operation extends BasicBankOperation{
     void execute(Account account, BigDecimal amount);
 }
