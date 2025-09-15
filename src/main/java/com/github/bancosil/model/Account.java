@@ -1,6 +1,7 @@
 package com.github.bancosil.model;
 
 import com.github.bancosil.model.valueobjects.*;
+import com.github.bancosil.model.valueobjects.cpfchecker.CPF;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
