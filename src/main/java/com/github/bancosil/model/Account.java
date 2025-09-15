@@ -1,5 +1,6 @@
 package com.github.bancosil.model;
 
+import com.github.bancosil.exception.operational.InsufficientBalanceException;
 import com.github.bancosil.model.valueobjects.*;
 import com.github.bancosil.model.valueobjects.cpfchecker.CPF;
 import jakarta.persistence.*;
@@ -53,6 +54,9 @@ public abstract class Account {
     }
 
     public void withdraw(BigDecimal amount) {
+        if (this.money.compareTo(amount) < 0) {
+            throw new InsufficientBalanceException();
+        }
         this.money = money.subtract(amount);
     }
 
