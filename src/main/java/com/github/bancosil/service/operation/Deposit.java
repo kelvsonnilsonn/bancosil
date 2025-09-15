@@ -11,4 +11,9 @@ public class Deposit implements Operation{
         OperationValidator.validate(amount);
         account.deposit(amount);
     }
+
+    @Override
+    public OperationType operationType() {
+        return OperationType.DEPOSIT;
+    }
 }
