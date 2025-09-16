@@ -53,6 +53,18 @@ public abstract class Account {
         this.address = Address.of(city, street, zipcode, number);
     }
 
+    public String getUsername(){
+        return username.getUsername();
+    }
+
+    public String getEmail(){
+        return email.getEmail();
+    }
+
+    public String getCPF(){
+        return cpf.getCpf();
+    }
+
     public void withdraw(BigDecimal amount) {
         if (this.money.compareTo(amount) < 0) {
             throw new InsufficientBalanceException();
