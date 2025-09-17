@@ -1,5 +1,6 @@
 package com.github.bancosil.controller;
 
+import com.github.bancosil.dto.AccountDTO;
 import com.github.bancosil.model.Account;
 import com.github.bancosil.model.Corrente;
 import com.github.bancosil.service.AccountService;
