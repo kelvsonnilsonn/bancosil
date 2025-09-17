@@ -1,10 +1,11 @@
 # Bancosil 🏦
-Sistema bancário em desenvolvimento construído com Spring Boot, oferecendo funcionalidades básicas de gerenciamento de contas bancárias.
+Sistema bancário construído com Spring, oferecendo funcionalidades básicas de gerenciamento de contas bancárias.
 
 ___
 
-## 📋 Status do Projeto
-🚧 Em Desenvolvimento - Este projeto está ativamente em desenvolvimento e sujeito a mudanças significativas.
+## 📋 Status do Projeto 
+Desenvolvido: suficientemente concluído para um uso comum. 
+Passível de outras modificações para acréscimo de funcionalidades.
 
 ___
 
@@ -20,12 +21,13 @@ Login e logout de usuários
 ### Operações Bancárias:
 - Depósito
 - Saque 
+- Transferência via PIX
 
 ### Gerenciamento de Dados:
 - Cadastro de usuários
 - Endereço completo com validações
 - Dados pessoais (CPF, email, etc.)
-- 
+
 ### Sistema de Exceções Personalizadas:
 - Tratamento específico para erros de negócio
 
@@ -110,12 +112,3 @@ ___
 - Operações de saque (withdraw)
 - Operações de depósito (deposit)
 - Padrão de operações através da interface Operation
-
-___
-
-## ⚠️ Notas de Desenvolvimento
-
-- As operações são realizadas via serviços
-- A segurança está em implementação
-- Testes automatizados estão sendo desenvolvidos
-- Sistema de exceções está em expansão para cobrir mais cenários
