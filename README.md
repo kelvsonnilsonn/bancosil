@@ -111,4 +111,5 @@ ___
 ### OperationalService
 - Operações de saque (withdraw)
 - Operações de depósito (deposit)
-- Padrão de operações através da interface Operation
+- Operações de transferências
+- Padrão de operações através de interfaces
