@@ -54,7 +54,7 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
-    @GetMapping
+    @GetMapping(value = {"", "/"})
     public ResponseEntity<List<AccountDTO>> findAll() {
         List<AccountDTO> accounts = accountService.findAll()
                 .stream()
