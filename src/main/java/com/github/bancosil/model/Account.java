@@ -32,7 +32,6 @@ public abstract class Account {
     private Email email;
 
     @Embedded
-    @JoinColumn(name = "CPF", unique = true)
     private CPF cpf;
 
     @Embedded
