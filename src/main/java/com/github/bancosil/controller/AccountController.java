@@ -54,6 +54,20 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
+    @GetMapping
+    public ResponseEntity<List<AccountDTO>> findAll() {
+        List<AccountDTO> accounts = accountService.findAll()
+                .stream()
+                .map(this::convertDTO)
+                .collect(Collectors.toList());
+
+        if (accounts.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(accounts);
+    }
+
 
     private AccountDTO convertDTO(Account account){
         return new AccountDTO(
