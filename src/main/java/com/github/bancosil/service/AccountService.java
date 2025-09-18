@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -34,6 +35,14 @@ public class AccountService implements LoginSystem {
         Objects.requireNonNull(id, "O id não pode ser nulo.");
         return accountDAO.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException(id));
+    }
+
+    public List<Account> findByUsername(String username){
+        return accountDAO.findByUsername(username);
+    }
+
+    public List<Account> findAll(){
+        return accountDAO.findAll();
     }
 
     @Override
