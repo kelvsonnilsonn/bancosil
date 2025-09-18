@@ -15,8 +15,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/accounts")
 public class AccountController {
 
+    private final AccountService accountService;
+
     @Autowired
-    private AccountService accountService;
+    public AccountController(AccountService accountService){
+        this.accountService = accountService;
+    }
 
     @PostMapping("/create")
     public String create(@RequestBody AccountDTO user){
@@ -35,7 +39,7 @@ public class AccountController {
     @GetMapping("/{id}")
     public ResponseEntity<AccountDTO> findById(@PathVariable("id") Long id){
         Account account = accountService.findById(id);
-        return ResponseEntity.ok(convertDTO(account));
+        return ResponseEntity.ok(AccountConverter.convert(account));
     }
 
     @GetMapping("/search")
@@ -44,7 +48,7 @@ public class AccountController {
 
         List<AccountDTO> accounts = accountService.findByUsername(username)
                 .stream()
-                .map(this::convertDTO)
+                .map(AccountConverter::convert)
                 .collect(Collectors.toList());
 
         if (accounts.isEmpty()) {
@@ -58,7 +62,7 @@ public class AccountController {
     public ResponseEntity<List<AccountDTO>> findAll() {
         List<AccountDTO> accounts = accountService.findAll()
                 .stream()
-                .map(this::convertDTO)
+                .map(AccountConverter::convert)
                 .collect(Collectors.toList());
 
         if (accounts.isEmpty()) {
@@ -66,14 +70,5 @@ public class AccountController {
         }
 
         return ResponseEntity.ok(accounts);
-    }
-
-
-    private AccountDTO convertDTO(Account account){
-        return new AccountDTO(
-                account.getUsername(),
-                account.getEmail(),
-                account.getPassword(),
-                account.getCPF());
     }
 }
