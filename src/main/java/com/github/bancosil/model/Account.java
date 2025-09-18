@@ -65,6 +65,8 @@ public abstract class Account {
         return cpf.getCpf();
     }
 
+    public String getPassword(){return password.getPassword(); }
+
     public void withdraw(BigDecimal amount) {
         if (this.money.compareTo(amount) < 0) {
             throw new InsufficientBalanceException();
