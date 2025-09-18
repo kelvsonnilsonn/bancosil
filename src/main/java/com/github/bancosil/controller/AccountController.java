@@ -30,4 +30,10 @@ public class AccountController {
         accountService.delete(id);
         return ResponseEntity.ok("Account " + account.getUsername() + " was deleted");
     }
+
+    @GetMapping("/find/{id}")
+    public ResponseEntity<String> findById(@PathVariable("id") Long id){
+        Account account = accountService.findById(id);
+        return ResponseEntity.ok("Username: " + account.getUsername() + "\nEmail: " + account.getEmail());
+    }
 }
