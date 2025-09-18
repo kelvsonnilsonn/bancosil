@@ -38,6 +38,23 @@ public class AccountController {
         return ResponseEntity.ok(convertDTO(account));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<AccountDTO>> findByUsername(
+            @RequestParam("username") String username) {
+
+        List<AccountDTO> accounts = accountService.findByUsername(username)
+                .stream()
+                .map(this::convertDTO)
+                .collect(Collectors.toList());
+
+        if (accounts.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(accounts);
+    }
+
+
     private AccountDTO convertDTO(Account account){
         return new AccountDTO(
                 account.getUsername(),
