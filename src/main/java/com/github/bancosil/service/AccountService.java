@@ -15,8 +15,12 @@ import java.util.Objects;
 @Service
 public class AccountService implements LoginSystem {
 
+    private final AccountRepository accountDAO;
+
     @Autowired
-    private AccountRepository accountDAO;
+    public AccountService(AccountRepository accountDAO){
+        this.accountDAO = accountDAO;
+    }
 
     public void create(Account account){
         Objects.requireNonNull(account, "A conta não pode ser nula.");
