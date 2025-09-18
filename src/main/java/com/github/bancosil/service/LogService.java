@@ -11,8 +11,12 @@ import java.math.BigDecimal;
 
 @Service
 public class LogService {
+    private final LogRepository logRepository;
+
     @Autowired
-    private LogRepository logRepository;
+    public LogService(LogRepository logRepository){
+        this.logRepository = logRepository;
+    }
 
     public void register(OperationType operationType, Account account, BigDecimal amount) {
         Log log = new Log(operationType, account, amount);
