@@ -14,9 +14,9 @@ public class BancosilApplication {
 	}
 
     @Bean
-    public CommandLineRunner run(ApplicationRunner runner){
+    public CommandLineRunner run(){
         return args -> {
-            runner.start();
+            System.out.println("Iniciado.");
         };
     }
 
