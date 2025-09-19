@@ -20,11 +20,15 @@ public class OperationController {
 
     private final OperationalService operationalService;
     private final AccountService accountService;
+    private final AccountConfigurations accountConfigurations;
 
     @Autowired
-    public OperationController(OperationalService operationalService, AccountService accountService){
+    public OperationController(OperationalService operationalService,
+                               AccountService accountService,
+                               AccountConfigurations accountConfigurations){
         this.accountService = accountService;
         this.operationalService = operationalService;
+        this.accountConfigurations = accountConfigurations;
     }
 
     @PostMapping("/deposit")
@@ -50,9 +54,9 @@ public class OperationController {
     }
 
     private Account getCurrentUser(){
-        if(!AccountConfigurations.isLogged()){
+        if(!accountConfigurations.isLogged()){
             throw new UnauthorizedException();
         }
-        return AccountConfigurations.getCurrentUser();
+        return accountConfigurations.getCurrentUser();
     }
 }
