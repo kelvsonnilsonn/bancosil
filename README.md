@@ -5,6 +5,7 @@ API REST bancária construída com **Spring Boot**, que oferece funcionalidades 
 
 ## 📋 Status do Projeto
 ✅ **Desenvolvido**: A API está funcional, com endpoints para autenticação, gerenciamento de contas e operações bancárias. É considerada "suficientemente concluída" para um uso comum.
+
 ➡️ **Passível de melhorias**: O projeto pode receber novas funcionalidades, como um sistema de autenticação mais robusto (JWT), otimizações e mais endpoints.
 
 ---
