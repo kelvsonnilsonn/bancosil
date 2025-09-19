@@ -1,6 +1,8 @@
 package com.github.bancosil.config;
 
 import com.github.bancosil.exception.account.AccountNotFoundException;
+import com.github.bancosil.exception.account.UnauthorizedException;
+import com.github.bancosil.exception.operational.NegativeOperationException;
 import com.github.bancosil.exception.valueobjects.InvalidCPFNumberException;
 import com.github.bancosil.exception.valueobjects.InvalidEmailException;
 import com.github.bancosil.exception.valueobjects.ShortUsernameException;
@@ -56,7 +58,19 @@ public class GlobalHandlerException {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred: " + e.getMessage());
+                .body("Um erro inesperado aconteceu: " + e.getMessage());
+    }
+
+    @ExceptionHandler(NegativeOperationException.class)
+    public ResponseEntity<String> handleNegativeException(NegativeOperationException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Não tem como transferir um valor negativo.");
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(e.getMessage());
     }
 
 }
