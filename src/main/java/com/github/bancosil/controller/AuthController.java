@@ -23,7 +23,7 @@ public class AuthController {
                                             @RequestParam String password) {
         try {
             accountConfigurations.login(username, password);
-            Account account = AccountConfigurations.getCurrentUser();
+            Account account = accountConfigurations.getCurrentUser();
             return ResponseEntity.ok(AccountConverter.convert(account));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
