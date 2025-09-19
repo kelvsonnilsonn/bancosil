@@ -5,6 +5,13 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
+/**
+ *  ISSO É TEMPORÁRIO.
+ *  EM BREVE USAREI JWT
+ */
+
+
 @Component
 public class AccountConfigurations {
     @Getter
@@ -14,7 +21,7 @@ public class AccountConfigurations {
     private LoginSystem system;
 
     public void logout(){
-        this.currentUser = null;
+        currentUser = null;
     }
 
     public boolean isLogged(){
@@ -22,7 +29,7 @@ public class AccountConfigurations {
     }
 
     public void login(String username, String password){
-        this.currentUser = system.login(username, password);
+        currentUser = system.login(username, password);
     }
 
 }
