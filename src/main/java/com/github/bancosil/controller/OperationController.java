@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping(AppConstants.OPERATION_BASE_PATH)
-public class OperationController {
+public class OperationController implements OperationAPI{
 
     private final OperationalService operationalService;
     private final AccountService accountService;
@@ -32,29 +32,29 @@ public class OperationController {
         this.accountConfigurations = accountConfigurations;
     }
 
+    @Override
     @PostMapping(AppConstants.DEPOSIT_PATH)
-    public ResponseEntity<?> deposit(@RequestParam BigDecimal amount){
+    public ResponseEntity<String> deposit(@RequestParam BigDecimal amount){
         Account account = getCurrentUser();
         operationalService.deposit(account, amount);
-        String message = String.format(AppConstants.DEPOSIT_MSG, amount);
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok(AppConstants.DEPOSIT_MSG);
     }
 
+    @Override
     @PostMapping(AppConstants.WITHDRAW_PATH)
-    public ResponseEntity<?> withdraw(@RequestParam BigDecimal amount){
+    public ResponseEntity<String> withdraw(@RequestParam BigDecimal amount){
         Account account = getCurrentUser();
         operationalService.withdraw(account, amount);
-        String message = String.format(AppConstants.WITHDRAW_MSG, amount);
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok(AppConstants.WITHDRAW_MSG);
     }
 
+    @Override
     @PostMapping(AppConstants.TRANSFER_PATH)
-    public ResponseEntity<?> transfer(@RequestParam Long id, @RequestParam BigDecimal amount){
+    public ResponseEntity<String> transfer(@RequestParam Long id, @RequestParam BigDecimal amount){
         Account sender = getCurrentUser();
         Account receiver = accountService.findById(id);
         operationalService.transferPix(sender, receiver, amount);
-        String message = String.format(AppConstants.TRANSFER_MSG, amount, receiver.getUsername());
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok(AppConstants.TRANSFER_MSG);
     }
 
     private Account getCurrentUser(){
