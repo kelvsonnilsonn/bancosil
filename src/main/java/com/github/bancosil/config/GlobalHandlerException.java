@@ -2,6 +2,7 @@ package com.github.bancosil.config;
 
 import com.github.bancosil.exception.account.AccountNotFoundException;
 import com.github.bancosil.exception.account.UnauthorizedException;
+import com.github.bancosil.exception.operational.InvalidOperationException;
 import com.github.bancosil.exception.operational.NegativeOperationException;
 import com.github.bancosil.exception.valueobjects.InvalidCPFNumberException;
 import com.github.bancosil.exception.valueobjects.InvalidEmailException;
@@ -70,6 +71,12 @@ public class GlobalHandlerException {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidOperationException.class)
+    public ResponseEntity<String> handleOperationException(InvalidOperationException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
     }
 
