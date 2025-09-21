@@ -1,5 +1,6 @@
 package com.github.bancosil.service;
 
+import com.github.bancosil.exception.operational.SelfTransferException;
 import com.github.bancosil.model.Account;
 import com.github.bancosil.service.operation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 @Service
@@ -32,6 +34,9 @@ public class OperationalService {
     }
 
     public void transferPix(Account sender, Account receiver, BigDecimal amount){
+        if(Objects.equals(sender.getId(), receiver.getId())){
+            throw new SelfTransferException("Você não pode transferir para si mesmo");
+        }
         executeTransfer(TransferPix::new, sender, receiver, amount);
     }
 
