@@ -1,6 +1,7 @@
 package com.github.bancosil.controller;
 
 import com.github.bancosil.config.AccountConfigurations;
+import com.github.bancosil.config.AppConstants;
 import com.github.bancosil.dto.AccountDTO;
 import com.github.bancosil.model.Account;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(AppConstants.AUTH_BASE_PATH)
 public class AuthController {
 
     private final AccountConfigurations accountConfigurations;
@@ -20,7 +21,7 @@ public class AuthController {
         this.accountConfigurations = accountConfigurations;
     }
 
-    @PostMapping("/login")
+    @PostMapping(AppConstants.LOGIN_PATH)
     public ResponseEntity<AccountDTO> login(@RequestParam String username,
                                             @RequestParam String password) {
         try {
@@ -32,7 +33,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/logout")
+    @PostMapping(AppConstants.LOGOUT_PATH)
     public ResponseEntity<String> logout(){
         accountConfigurations.logout();
         return ResponseEntity.ok("Usuário deslogado.");
