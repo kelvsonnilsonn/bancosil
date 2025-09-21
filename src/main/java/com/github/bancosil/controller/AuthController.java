@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(AppConstants.AUTH_BASE_PATH)
-public class AuthController {
+public class AuthController implements AuthAPI{
 
     private final AccountConfigurations accountConfigurations;
 
@@ -21,18 +21,16 @@ public class AuthController {
         this.accountConfigurations = accountConfigurations;
     }
 
+    @Override
     @PostMapping(AppConstants.LOGIN_PATH)
     public ResponseEntity<AccountDTO> login(@RequestParam String username,
                                             @RequestParam String password) {
-        try {
-            accountConfigurations.login(username, password);
-            Account account = accountConfigurations.getCurrentUser();
-            return ResponseEntity.ok(AccountConverter.convert(account));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        accountConfigurations.login(username, password);
+        Account account = accountConfigurations.getCurrentUser();
+        return ResponseEntity.ok(AccountConverter.convert(account));
     }
 
+    @Override
     @PostMapping(AppConstants.LOGOUT_PATH)
     public ResponseEntity<String> logout(){
         accountConfigurations.logout();
