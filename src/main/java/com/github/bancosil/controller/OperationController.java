@@ -1,6 +1,7 @@
 package com.github.bancosil.controller;
 
 import com.github.bancosil.config.AccountConfigurations;
+import com.github.bancosil.config.AppConstants;
 import com.github.bancosil.exception.account.UnauthorizedException;
 import com.github.bancosil.model.Account;
 import com.github.bancosil.service.AccountService;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/operation")
+@RequestMapping(AppConstants.OPERATION_BASE_PATH)
 public class OperationController {
 
     private final OperationalService operationalService;
@@ -31,26 +32,29 @@ public class OperationController {
         this.accountConfigurations = accountConfigurations;
     }
 
-    @PostMapping("/deposit")
+    @PostMapping(AppConstants.DEPOSIT_PATH)
     public ResponseEntity<?> deposit(@RequestParam BigDecimal amount){
         Account account = getCurrentUser();
         operationalService.deposit(account, amount);
-        return ResponseEntity.ok("Deposito de " + amount.toString() + " realizado com sucesso");
+        String message = String.format(AppConstants.DEPOSIT_MSG, amount);
+        return ResponseEntity.ok(message);
     }
 
-    @PostMapping("/withdraw")
+    @PostMapping(AppConstants.WITHDRAW_PATH)
     public ResponseEntity<?> withdraw(@RequestParam BigDecimal amount){
         Account account = getCurrentUser();
         operationalService.withdraw(account, amount);
-        return ResponseEntity.ok("Saque de " + amount.toString() + " realizado com sucesso");
+        String message = String.format(AppConstants.WITHDRAW_MSG, amount);
+        return ResponseEntity.ok(message);
     }
 
-    @PostMapping("/transfer")
+    @PostMapping(AppConstants.TRANSFER_PATH)
     public ResponseEntity<?> transfer(@RequestParam Long id, @RequestParam BigDecimal amount){
         Account sender = getCurrentUser();
         Account receiver = accountService.findById(id);
         operationalService.transferPix(sender, receiver, amount);
-        return ResponseEntity.ok("Transferência realizada com sucesso");
+        String message = String.format(AppConstants.TRANSFER_MSG, amount, receiver.getUsername());
+        return ResponseEntity.ok(message);
     }
 
     private Account getCurrentUser(){
