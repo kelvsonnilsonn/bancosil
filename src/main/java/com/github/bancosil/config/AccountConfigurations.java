@@ -1,5 +1,6 @@
 package com.github.bancosil.config;
 
+import com.github.bancosil.exception.account.UnauthorizedException;
 import com.github.bancosil.model.Account;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class AccountConfigurations {
     private LoginSystem system;
 
     public void logout(){
+        if(!isLogged()){
+            throw new UnauthorizedException();
+        }
         currentUser = null;
     }
 
