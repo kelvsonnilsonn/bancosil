@@ -56,7 +56,7 @@ public class AccountService implements LoginSystem {
     }
 
     public void update(Account ...account) {
-        Arrays.stream(account).forEach(a -> accountDAO.save(a));
+        Arrays.stream(account).forEach(accountDAO::save);
     }
 
 }
