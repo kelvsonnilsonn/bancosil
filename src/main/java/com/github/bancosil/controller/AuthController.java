@@ -4,7 +4,6 @@ import com.github.bancosil.config.AccountConfigurations;
 import com.github.bancosil.config.AppConstants;
 import com.github.bancosil.dto.AccountDTO;
 import com.github.bancosil.model.Account;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
