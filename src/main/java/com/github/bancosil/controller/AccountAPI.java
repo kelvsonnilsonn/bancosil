@@ -3,6 +3,7 @@ package com.github.bancosil.controller;
 import com.github.bancosil.config.AppConstants;
 import com.github.bancosil.config.HttpConstants;
 import com.github.bancosil.dto.AccountDTO;
+import com.github.bancosil.dto.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,15 +36,20 @@ public interface AccountAPI {
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
     ResponseEntity<AccountDTO> findById(@PathVariable("id") Long id);
 
-    @Operation(summary = "Buscar por username", description = "Busca contas por username")
+    @Operation(summary = "Buscar por username", description = "Busca contas por username com paginação")
     @ApiResponse(responseCode = HttpConstants.OK, description = "Contas encontradas")
     @ApiResponse(responseCode = HttpConstants.NO_CONTENT, description = HttpConstants.NO_CONTENT_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<List<AccountDTO>> findByUsername(@RequestParam(AppConstants.USERNAME_PARAM) String username);
+    ResponseEntity<PageResponse<AccountDTO>> findByUsername(
+            @RequestParam(AppConstants.USERNAME_PARAM) String username,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size);
 
     @Operation(summary = "Listar todas as contas", description = "Retorna todas as contas com paginação")
     @ApiResponse(responseCode = HttpConstants.OK, description = "Lista de contas")
     @ApiResponse(responseCode = HttpConstants.NO_CONTENT, description = HttpConstants.NO_CONTENT_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<List<AccountDTO>> findAll();
+    ResponseEntity<PageResponse<AccountDTO>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size);
 }
