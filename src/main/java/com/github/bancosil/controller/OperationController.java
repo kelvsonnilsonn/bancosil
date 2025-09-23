@@ -2,6 +2,9 @@ package com.github.bancosil.controller;
 
 import com.github.bancosil.config.AccountConfigurations;
 import com.github.bancosil.config.AppConstants;
+import com.github.bancosil.dto.DepositDTO;
+import com.github.bancosil.dto.TransferDTO;
+import com.github.bancosil.dto.WithdrawDTO;
 import com.github.bancosil.exception.account.UnauthorizedException;
 import com.github.bancosil.model.Account;
 import com.github.bancosil.service.AccountService;
@@ -9,11 +12,15 @@ import com.github.bancosil.service.OperationalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
+/**
+ * Por: Kelvson Nilson
+ * Última atualização: 23/09/2025
+ * Versão: 1.1
+ * */
 
 @RestController
 @RequestMapping(AppConstants.OPERATION_BASE_PATH)
@@ -34,26 +41,26 @@ public class OperationController implements OperationAPI{
 
     @Override
     @PostMapping(AppConstants.DEPOSIT_PATH)
-    public ResponseEntity<String> deposit(@RequestParam BigDecimal amount){
+    public ResponseEntity<String> deposit(@RequestBody DepositDTO depositDTO){
         Account account = getCurrentUser();
-        operationalService.deposit(account, amount);
+        operationalService.deposit(account, depositDTO.amount());
         return ResponseEntity.ok(AppConstants.DEPOSIT_MSG);
     }
 
     @Override
     @PostMapping(AppConstants.WITHDRAW_PATH)
-    public ResponseEntity<String> withdraw(@RequestParam BigDecimal amount){
+    public ResponseEntity<String> withdraw(@RequestBody WithdrawDTO withdrawDTO){
         Account account = getCurrentUser();
-        operationalService.withdraw(account, amount);
+        operationalService.withdraw(account, withdrawDTO.amount());
         return ResponseEntity.ok(AppConstants.WITHDRAW_MSG);
     }
 
     @Override
     @PostMapping(AppConstants.TRANSFER_PATH)
-    public ResponseEntity<String> transfer(@RequestParam Long id, @RequestParam BigDecimal amount){
+    public ResponseEntity<String> transfer(@RequestBody TransferDTO transferDTO){
         Account sender = getCurrentUser();
-        Account receiver = accountService.findById(id);
-        operationalService.transferPix(sender, receiver, amount);
+        Account receiver = accountService.findById(transferDTO.id());
+        operationalService.transferPix(sender, receiver, transferDTO.amount());
         return ResponseEntity.ok(AppConstants.TRANSFER_MSG);
     }
 
