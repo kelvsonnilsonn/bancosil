@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Objects;
+
 @RestControllerAdvice
 public class GlobalHandlerException {
 
@@ -50,9 +52,17 @@ public class GlobalHandlerException {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException e) {
-        if (e.getMessage().toLowerCase().contains("cpf")) {
+
+        String message = e.getMessage().toLowerCase();
+
+        if (message.contains("constraint_index_e4") && message.contains("username")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Nome de usuário já está em uso");
+        }
+
+        if (message.contains("constraint_index_e") && message.contains("cpf")) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já está em uso");
         }
+
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Dados duplicados");
     }
 
