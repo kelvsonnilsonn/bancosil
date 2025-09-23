@@ -2,8 +2,8 @@ package com.github.bancosil.config;
 
 import com.github.bancosil.exception.account.AccountNotFoundException;
 import com.github.bancosil.exception.account.UnauthorizedException;
-import com.github.bancosil.exception.operational.SelfTransferException;
 import com.github.bancosil.exception.operational.NegativeOperationException;
+import com.github.bancosil.exception.operational.SelfTransferException;
 import com.github.bancosil.exception.valueobjects.InvalidCPFNumberException;
 import com.github.bancosil.exception.valueobjects.InvalidEmailException;
 import com.github.bancosil.exception.valueobjects.ShortUsernameException;
@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalHandlerException {
