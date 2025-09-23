@@ -1,6 +1,7 @@
 package com.github.bancosil.model.valueobjects;
 
 import com.github.bancosil.exception.valueobjects.ShortUsernameException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Username {
+    @Column(name="username", unique = true)
     private String username;
 
     public Username(String username){
