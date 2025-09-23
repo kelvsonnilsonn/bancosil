@@ -5,6 +5,10 @@ import com.github.bancosil.dto.AccountDTO;
 import com.github.bancosil.dto.PageResponse;
 import com.github.bancosil.model.Account;
 import com.github.bancosil.model.Corrente;
+import com.github.bancosil.model.valueobjects.Email;
+import com.github.bancosil.model.valueobjects.Password;
+import com.github.bancosil.model.valueobjects.Username;
+import com.github.bancosil.model.valueobjects.cpfchecker.CPF;
 import com.github.bancosil.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,7 +52,7 @@ public class AccountController implements AccountAPI{
         return ResponseEntity.created(location).body(AccountConverter.convert(account));
     }
 
-    @DeleteMapping(AppConstants.DELETE_PATH)
+    @DeleteMapping(AppConstants.ID_PATH)
     public ResponseEntity<String> delete(@PathVariable("id") Long id){
         Account account = accountService.findById(id);
         String message = String.format(AppConstants.ACCOUNT_DELETED_MSG, account.getUsername());
@@ -77,7 +81,9 @@ public class AccountController implements AccountAPI{
                 .map(AccountConverter::convert)
                 .toList();
 
-        return accounts.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(createPageResponse(content, accounts));
+        return accounts.isEmpty() ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.ok(createPageResponse(content, accounts));
     }
 
     @GetMapping(value = {"", "/"})
