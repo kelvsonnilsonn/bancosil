@@ -1,6 +1,5 @@
 package com.github.bancosil;
 
-import com.github.bancosil.application.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
