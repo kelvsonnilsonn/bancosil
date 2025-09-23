@@ -6,11 +6,17 @@ import com.github.bancosil.model.Account;
 import com.github.bancosil.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
+
+/**
+ * Por: Kelvson Nilson
+ * Última atualização: 23/09/2025
+ * */
 
 @Service
 public class AccountService implements LoginSystem {
@@ -41,12 +47,12 @@ public class AccountService implements LoginSystem {
                 .orElseThrow(() -> new AccountNotFoundException(id));
     }
 
-    public List<Account> findByUsername(String username){
-        return accountDAO.findByUsername(username);
+    public Page<Account> findByUsername(String username, Pageable pageable){
+        return accountDAO.findByUsername(username, pageable);
     }
 
-    public List<Account> findAll(){
-        return accountDAO.findAll();
+    public Page<Account> findAll(Pageable pageable){
+        return accountDAO.findAll(pageable);
     }
 
     @Override
