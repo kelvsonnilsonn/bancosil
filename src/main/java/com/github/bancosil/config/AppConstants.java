@@ -11,7 +11,6 @@ public class AppConstants {
     public static final String CREATE_PATH = "/create";
     public static final String ID_PATH = "/{id}";
     public static final String SEARCH_PATH = "/search";
-    public static final String DELETE_PATH = "/{id}";
 
     public static final String AUTH_BASE_PATH = "/auth";
     public static final String LOGIN_PATH = "/login";
