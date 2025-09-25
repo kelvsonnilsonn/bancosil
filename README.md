@@ -28,8 +28,6 @@ Endpoints REST para login e logout de usuários.
 
 ### Tipos de Conta
 - Conta Corrente (`Corrente`)
-- Conta Poupança (`Poupanca`)
-- Conta Investimento (`Investimento`)
 
 ### Gerenciamento de Dados
 - **Cadastro de usuários**: Endpoints para cadastro e busca de contas.
