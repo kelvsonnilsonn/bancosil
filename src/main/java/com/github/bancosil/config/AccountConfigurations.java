@@ -32,8 +32,9 @@ public class AccountConfigurations {
         return currentUser != null;
     }
 
-    public void login(String username, String password){
+    public Account login(String username, String password){
         currentUser = system.login(username, password);
+        return currentUser;
     }
 
 }
