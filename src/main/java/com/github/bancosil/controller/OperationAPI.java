@@ -1,6 +1,6 @@
 package com.github.bancosil.controller;
 
-import com.github.bancosil.config.HttpConstants;
+import com.github.bancosil.util.HttpConstants;
 import com.github.bancosil.dto.DepositDTO;
 import com.github.bancosil.dto.TransferDTO;
 import com.github.bancosil.dto.WithdrawDTO;
