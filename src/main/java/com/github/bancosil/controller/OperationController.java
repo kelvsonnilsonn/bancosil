@@ -1,7 +1,7 @@
 package com.github.bancosil.controller;
 
 import com.github.bancosil.config.AccountConfigurations;
-import com.github.bancosil.config.AppConstants;
+import com.github.bancosil.util.AppConstants;
 import com.github.bancosil.dto.DepositDTO;
 import com.github.bancosil.dto.TransferDTO;
 import com.github.bancosil.dto.WithdrawDTO;
@@ -15,12 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-/**
- * Por: Kelvson Nilson
- * Última atualização: 23/09/2025
- * Versão: 1.1
- * */
 
 @RestController
 @RequestMapping(AppConstants.OPERATION_BASE_PATH)
