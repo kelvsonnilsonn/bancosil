@@ -1,12 +1,12 @@
-# Bancosil 🏦
+# Bancosil 🏦 - Sistema Bancário em Spring Boot
 API REST bancária construída com **Spring Boot**, que oferece funcionalidades básicas para gerenciamento de contas bancárias.
 
 ---
 
 ## 📋 Status do Projeto
-✅ **Desenvolvido**: A API está funcional, com endpoints para autenticação, gerenciamento de contas e operações bancárias. É considerada "suficientemente concluída" para um uso comum.
+✅ **Concluído**: Sistema completo com autenticação, operações financeiras, validações robustas e tratamento de erros.
 
-➡️ **Passível de melhorias**: O projeto pode receber novas funcionalidades, como um sistema de autenticação mais robusto (JWT), otimizações e mais endpoints.
+🚀 **Em produção**: Pronto para uso com arquitetura escalável e documentação completa.
 
 ---
 
@@ -15,53 +15,97 @@ API REST bancária construída com **Spring Boot**, que oferece funcionalidades 
 Endpoints REST para login e logout de usuários.
 
 ### Endpoints da API
-- `POST /auth/login` - Autentica um usuário.
-- `POST /auth/logout` - Desloga o usuário atual.
-- `POST /accounts/create` - Cria uma nova conta.
-- `GET /accounts/{id}` - Busca uma conta por ID.
-- `GET /accounts/search?username=...` - Busca contas por nome de usuário.
-- `DELETE /accounts/delete/{id}` - Deleta uma conta.
-- `GET /accounts` - Lista todas as contas.
-- `POST /operation/deposit` - Realiza um depósito na conta do usuário logado.
-- `POST /operation/withdraw` - Realiza um saque na conta do usuário logado.
-- `POST /operation/transfer` - Realiza uma transferência PIX entre contas.
+#### 👥 Autenticação (/auth)
+- `POST /auth/login` - Autentica um usuário
+- `POST /auth/logout` - Desloga o usuário atual
+
+#### 💳 Gestão de Contas (/accounts)
+- `POST /accounts/create` - Cria uma nova conta
+- `GET /accounts/{id}` - Busca uma conta por ID
+- `GET /accounts/search?username={username}&page={page}&size={size}` - Busca contas por nome de usuário (paginação)
+- `GET /accounts?page={page}&size={size}` - Lista todas as contas (paginação)
+- `DELETE /accounts/{id}` - Deleta uma conta
+
+#### 💰 Operações Financeiras (/operation)
+- `POST /operation/deposit` - Realiza um depósito na conta do usuário logado
+- `POST /operation/withdraw` - Realiza um saque na conta do usuário logado
+- `POST /operation/transfer` - Realiza uma transferência PIX entre contas
 
 ### Tipos de Conta
 - Conta Corrente (`Corrente`)
 
 ### Gerenciamento de Dados
-- **Cadastro de usuários**: Endpoints para cadastro e busca de contas.
-- **Validação de dados**: Uso de **Value Objects** para validar atributos como CPF, e-mail e endereço.
+- Cadastro de usuários: Endpoints para cadastro e busca de contas
+-Validação de dados: Uso de Value Objects para validar atributos como CPF, e-mail e endereço
+-Paginação: Sistema completo de paginação em consultas de listagem
 
-### Sistema de Exceções Personalizadas
-Tratamento de erros de negócio e validações, retornando respostas HTTP apropriadas (`404 NOT FOUND`, `400 BAD REQUEST`, etc.).
+## 💰 Sistema de Operações Financeiras
 
+### Padrão Strategy para Operações
+- `Operation` interface para depósito e saque
+- `TransferOperation` interface para transferências
+- Implementações: `Deposit`, `Withdraw`, `TransferPix`
+
+### Sistema de Auditoria
+- Entidade `Log` registrando todas as operações
+- `OperationType` enum para categorizar operações
+- Registro de autor, receptor, valor e timestamp
+
+## 🔒 Tratamento de Exceções Personalizadas
+
+### Exceções Específicas Implementadas:
+- `AccountNotFoundException` - Conta não encontrada (404)
+- `UnauthorizedException` - Acesso não autorizado (401)
+- `InsufficientBalanceException` - Saldo insuficiente (400)
+- `SelfTransferException` - Tentativa de auto-transferência (400)
+- `NegativeOperationException` - Valores negativos em operações (400)
+- `InvalidCPFNumberException` - CPF inválido (400)
+- `InvalidEmailException` - E-mail inválido (400)
+
+### Handler Global
+- `@RestControllerAdvice` centralizando tratamento de erros
+- Respostas HTTP apropriadas para cada tipo de exceção
 ---
 
 ## 🛠️ Tecnologias Utilizadas
-- **Java 21**
-- **Spring Boot 3.5.5**: Framework principal para construção da API.
-- **Spring Data JPA**: Abstração para a camada de persistência.
-- **Lombok**: Redução de código *boilerplate*.
-- **H2 Database**: Banco de dados em memória para desenvolvimento.
-- **MySQL**: Banco de dados relacional para produção.
-- **Maven**: Gerenciamento de dependências.
-
+- **Spring Boot 3.5.5**
+- **Spring Data JPA**
+- **Lombok**
+- **H2 Database** (dev)
+- **MySQL** (prod)
+- **OpenAPI 3** (Swagger UI)
+- **Maven**
 ---
+
+## 🏗️ Arquitetura e Padrões Implementados
+
+### 🔷 Padrões de Projeto
+- **Strategy Pattern**: Operações bancárias (Deposit, Withdraw, Transfer)
+- **Factory Method**: Criação dinâmica de operações
+- **DTO Pattern**: Segurança na transferência de dados
+- **Value Objects**: Validação de CPF, e-mail, senha e username
+
+### 📊 Sistema de Paginação
+- Implementação de `PageResponseDTO` para consultas paginadas
+- Parâmetros `page` e `size` em endpoints de listagem
+- Ordenação por username nas consultas
 
 ## 📦 Estrutura do Projeto
 ```text
 src/
 ├── main/
-│   ├── java/com/github/bancosil/
-│   │   ├── config/           # Configurações globais e tratamento de exceções
-│   │   ├── controller/       # Camada de Endpoints REST
-│   │   ├── dto/               # Data Transfer Objects
-│   │   ├── model/             # Entidades de domínio (Contas e Log)
-│   │   ├── repository/        # Camada de persistência (JPA Repositories)
-│   │   ├── service/           # Lógica de negócio e operações
-│   │   └── exception/         # Exceções personalizadas
-│   └── resources/            # Configurações e propriedades da aplicação
+│   ├── java/com/github/bancosil/
+│   │   ├── config/           # Configurações globais
+│   │   ├── controller/       # Endpoints REST + interfaces
+│   │   ├── dto/              # Data Transfer Objects  
+│   │   ├── model/            # Entidades + Value Objects
+│   │   ├── repository/       # JPA Repositories
+│   │   ├── service/          # Lógica de negócio
+│   │   ├── service/operation/# Operações bancárias (Strategy)
+│   │   ├── handler/          # Tratamento global de exceções
+│   │   ├── mapper/           # Conversores DTO/Entity
+│   │   └── util/             # Constantes e utilitários
+│   └── resources/            # Configurações
 ```
 
 ## 📝 Modelo de Dados
@@ -99,4 +143,40 @@ spring.h2.console.enabled=true
 # spring.datasource.username=seu-usuario
 # spring.datasource.password=sua-senha
 # spring.jpa.hibernate.ddl-auto=update
+```
+## 🚀 Como Executar
+### Pré-requisitos
+- Java 21+
+- Maven 3.6+
+
+### Execução
+```bash
+mvn spring-boot:run
+```
+
+## Documentação Interativa
+- Swagger UI: http://localhost:8080/swagger-ui.html
+
+## 📋 Exemplos de Uso
+### Criar Conta
+- `POST /accounts/create`
+```bash
+{
+    "username": "joao.silva",
+    "email": "joao@email.com",
+    "password": "senha123",
+    "cpf": "123.456.789-00"
+}
+```
+### Buscar Contas com Paginação
+- `GET /accounts/search?username=joao&page=0&size=10`
+
+### Realizar Transferência
+- `POST /operation/transfer`
+
+```bash
+{
+  "amount": 100.50,
+  "id": 2
+}
 ```
