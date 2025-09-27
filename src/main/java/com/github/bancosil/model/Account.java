@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -38,6 +39,8 @@ public abstract class Account {
 
     private BigDecimal money;
 
+    private LocalDateTime createdAt;
+
     public Account(String username, String password, String email, String cpf){
         this.username = new Username(username);
         this.password = new Password(password);
@@ -45,6 +48,7 @@ public abstract class Account {
         this.cpf = new CPF(cpf);
         this.address = new Address("Não definida", "Não definida", "Não definida", 0);
         this.money = BigDecimal.ZERO;
+        this.createdAt = LocalDateTime.now();
     }
 
     public void selectAddress(String city, String street, String zipcode, int number){
