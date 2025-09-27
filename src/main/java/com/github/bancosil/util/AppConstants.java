@@ -1,4 +1,4 @@
-package com.github.bancosil.config;
+package com.github.bancosil.util;
 
 import lombok.experimental.UtilityClass;
 

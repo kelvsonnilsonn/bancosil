@@ -1,4 +1,4 @@
-package com.github.bancosil.config;
+package com.github.bancosil.handler;
 
 import com.github.bancosil.exception.account.AccountNotFoundException;
 import com.github.bancosil.exception.account.UnauthorizedException;
