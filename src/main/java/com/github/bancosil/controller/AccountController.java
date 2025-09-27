@@ -1,24 +1,15 @@
 package com.github.bancosil.controller;
 
-import com.github.bancosil.mapper.AccountMapper;
-import com.github.bancosil.util.AppConstants;
-import com.github.bancosil.dto.AccountDTO;
-import com.github.bancosil.dto.PageResponse;
-import com.github.bancosil.model.Account;
-import com.github.bancosil.model.Corrente;
+import com.github.bancosil.dto.AccountRequestDTO;
+import com.github.bancosil.dto.AccountResponseDTO;
+import com.github.bancosil.dto.PageResponseDTO;
 import com.github.bancosil.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import com.github.bancosil.util.AppConstants;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping(AppConstants.ACCOUNT_BASE_PATH)
@@ -26,84 +17,45 @@ public class AccountController implements AccountAPI{
 
     private final AccountService accountService;
 
-    @Autowired
     public AccountController(AccountService accountService){
         this.accountService = accountService;
     }
 
     @PostMapping(AppConstants.CREATE_PATH)
-    public ResponseEntity<AccountDTO> create(@RequestBody AccountDTO user){
-        Account account = new Corrente(user.username(), user.password(), user.email(), user.cpf());
-        accountService.create(account);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("{/id}")
-                .buildAndExpand(account.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(AccountMapper.convert(account));
+    public ResponseEntity<AccountResponseDTO> create(@RequestBody AccountRequestDTO user){
+        AccountResponseDTO account = accountService.create(user);
+        return ResponseEntity.ok(account);
     }
 
     @DeleteMapping(AppConstants.ID_PATH)
     public ResponseEntity<String> delete(@PathVariable("id") Long id){
-        Account account = accountService.findById(id);
-        String message = String.format(AppConstants.ACCOUNT_DELETED_MSG, account.getUsername());
-        accountService.delete(id);
+        String message = accountService.delete(id);
         return ResponseEntity.ok(message);
     }
 
     @GetMapping(AppConstants.ID_PATH)
-    public ResponseEntity<AccountDTO> findById(@PathVariable("id") Long id){
-        Account account = accountService.findById(id);
-        return ResponseEntity.ok(AccountMapper.convert(account));
+    public ResponseEntity<AccountResponseDTO> findById(@PathVariable("id") Long id){
+        AccountResponseDTO account = accountService.findById(id);
+        return ResponseEntity.ok(account);
     }
 
     @GetMapping(AppConstants.SEARCH_PATH)
-    public ResponseEntity<PageResponse<AccountDTO>> findByUsername(
+    public ResponseEntity<PageResponseDTO<AccountResponseDTO>> findByUsername(
         @RequestParam(AppConstants.USERNAME_PARAM) String username,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("username"));
 
-        Page<Account> content = accountService.findByUsername(username, pageable);
-
-        List<AccountDTO> accounts = content.getContent()
-                .stream()
-                .map(AccountMapper::convert)
-                .toList();
-
-        return accounts.isEmpty() ?
-                ResponseEntity.noContent().build() :
-                ResponseEntity.ok(createPageResponse(content, accounts));
+        return ResponseEntity.ok(accountService.findAll(pageable));
     }
 
     @GetMapping(value = {"", "/"})
-    public ResponseEntity<PageResponse<AccountDTO>> findAll(
+    public ResponseEntity<PageResponseDTO<AccountResponseDTO>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("username"));
-
-        Page<Account> content = accountService.findAll(pageable);
-
-        List<AccountDTO> accounts = content.getContent()
-                .stream()
-                .map(AccountMapper::convert)
-                .toList();
-
-        return accounts.isEmpty() ?
-                ResponseEntity.noContent().build() :
-                ResponseEntity.ok(createPageResponse(content, accounts));
-    }
-
-    private PageResponse<AccountDTO> createPageResponse(Page<Account> content, List<AccountDTO> accounts){
-        return new PageResponse<>(
-                accounts,
-                content.getNumber(),
-                content.getTotalPages(),
-                content.getTotalElements(),
-                content.getSize(),
-                HttpStatus.OK.value()
-        );
+        return ResponseEntity.ok(accountService.findAll(pageable));
     }
 }
