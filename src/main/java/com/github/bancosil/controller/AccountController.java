@@ -1,6 +1,7 @@
 package com.github.bancosil.controller;
 
-import com.github.bancosil.config.AppConstants;
+import com.github.bancosil.mapper.AccountMapper;
+import com.github.bancosil.util.AppConstants;
 import com.github.bancosil.dto.AccountDTO;
 import com.github.bancosil.dto.PageResponse;
 import com.github.bancosil.model.Account;
@@ -18,12 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-
-/**
- * Por: Kelvson Nilson
- * Última atualização: 23/09/2025
- * Versão: 1.3
- * */
 
 @RestController
 @RequestMapping(AppConstants.ACCOUNT_BASE_PATH)
@@ -45,7 +40,7 @@ public class AccountController implements AccountAPI{
                 .buildAndExpand(account.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(AccountConverter.convert(account));
+        return ResponseEntity.created(location).body(AccountMapper.convert(account));
     }
 
     @DeleteMapping(AppConstants.ID_PATH)
@@ -59,7 +54,7 @@ public class AccountController implements AccountAPI{
     @GetMapping(AppConstants.ID_PATH)
     public ResponseEntity<AccountDTO> findById(@PathVariable("id") Long id){
         Account account = accountService.findById(id);
-        return ResponseEntity.ok(AccountConverter.convert(account));
+        return ResponseEntity.ok(AccountMapper.convert(account));
     }
 
     @GetMapping(AppConstants.SEARCH_PATH)
@@ -74,7 +69,7 @@ public class AccountController implements AccountAPI{
 
         List<AccountDTO> accounts = content.getContent()
                 .stream()
-                .map(AccountConverter::convert)
+                .map(AccountMapper::convert)
                 .toList();
 
         return accounts.isEmpty() ?
@@ -93,7 +88,7 @@ public class AccountController implements AccountAPI{
 
         List<AccountDTO> accounts = content.getContent()
                 .stream()
-                .map(AccountConverter::convert)
+                .map(AccountMapper::convert)
                 .toList();
 
         return accounts.isEmpty() ?
