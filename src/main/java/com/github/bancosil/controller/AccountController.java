@@ -47,7 +47,7 @@ public class AccountController implements AccountAPI{
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("username"));
 
-        return ResponseEntity.ok(accountService.findAll(pageable));
+        return ResponseEntity.ok(accountService.findByUsername(username, pageable));
     }
 
     @GetMapping(value = {"", "/"})
