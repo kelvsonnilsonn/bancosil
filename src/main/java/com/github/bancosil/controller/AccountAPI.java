@@ -1,7 +1,7 @@
 package com.github.bancosil.controller;
 
-import com.github.bancosil.config.AppConstants;
-import com.github.bancosil.config.HttpConstants;
+import com.github.bancosil.util.AppConstants;
+import com.github.bancosil.util.HttpConstants;
 import com.github.bancosil.dto.AccountDTO;
 import com.github.bancosil.dto.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
