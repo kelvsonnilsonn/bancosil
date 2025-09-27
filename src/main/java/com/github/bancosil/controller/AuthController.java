@@ -1,9 +1,10 @@
 package com.github.bancosil.controller;
 
 import com.github.bancosil.config.AccountConfigurations;
+import com.github.bancosil.dto.AccountResponseDTO;
 import com.github.bancosil.mapper.AccountMapper;
 import com.github.bancosil.util.AppConstants;
-import com.github.bancosil.dto.AccountDTO;
+import com.github.bancosil.dto.AccountRequestDTO;
 import com.github.bancosil.dto.LoginDTO;
 import com.github.bancosil.model.Account;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +25,9 @@ public class AuthController implements AuthAPI{
 
     @Override
     @PostMapping(AppConstants.LOGIN_PATH)
-    public ResponseEntity<AccountDTO> login(@RequestBody LoginDTO loginDTO) {
-        accountConfigurations.login(loginDTO.username(), loginDTO.password());
-        Account account = accountConfigurations.getCurrentUser();
-        return ResponseEntity.ok(AccountMapper.convert(account));
+    public ResponseEntity<AccountResponseDTO> login(@RequestBody LoginDTO loginDTO) {
+        Account account = accountConfigurations.login(loginDTO.username(), loginDTO.password());
+        return ResponseEntity.ok(AccountMapper.toResponse(account));
     }
 
     @Override
