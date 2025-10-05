@@ -3,13 +3,15 @@ package com.github.bancosil.model;
 import com.github.bancosil.service.operation.OperationType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Log {
 
     @Id
@@ -29,18 +31,25 @@ public class Log {
 
     private BigDecimal amount;
 
-    private Instant instant;
+    private LocalDateTime createdAt;
 
     public Log(OperationType operationType, Account author, BigDecimal amount){
         this(operationType, author, null, amount);
     }
 
-    public Log(OperationType operationType, Account sender, Account receiver, BigDecimal amount){
+    public Log(OperationType operationType, Account sender, Account receiver, BigDecimal amount) {
         this.operationType = operationType;
         this.author = sender;
         this.receiver = receiver;
         this.amount = amount;
-        this.instant = Instant.now();
+        this.createdAt = LocalDateTime.now();
     }
 
+    public String getAuthorName() {
+        return author.getUsername();
+    }
+
+    public String getReceiverName(){
+        return receiver == null ? null : receiver.getUsername();
+    }
 }
