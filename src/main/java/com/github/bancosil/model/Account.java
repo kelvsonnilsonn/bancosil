@@ -1,5 +1,6 @@
 package com.github.bancosil.model;
 
+import com.github.bancosil.enums.AccountType;
 import com.github.bancosil.exception.operational.InsufficientBalanceException;
 import com.github.bancosil.model.valueobjects.*;
 import com.github.bancosil.model.valueobjects.cpfchecker.CPF;
@@ -13,14 +14,16 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_conta", discriminatorType = DiscriminatorType.STRING)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class Account {
+@Table(name="accounts")
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
 
     @Embedded
     private Username username;
@@ -41,11 +44,12 @@ public abstract class Account {
 
     private LocalDateTime createdAt;
 
-    public Account(String username, String password, String email, String cpf){
-        this.username = new Username(username);
-        this.password = new Password(password);
-        this.email = new Email(email);
-        this.cpf = new CPF(cpf);
+    public Account(Username username, Password password, Email email, CPF cpf, AccountType type){
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.cpf = cpf;
+        this.type = type;
         this.address = new Address("Não definida", "Não definida", "Não definida", 0);
         this.money = BigDecimal.ZERO;
         this.createdAt = LocalDateTime.now();
