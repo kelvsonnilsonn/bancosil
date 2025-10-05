@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(AppConstants.ACCOUNT_BASE_PATH)
 public class AccountController implements AccountAPI{
- 
+
     private final AccountService accountService;
 
     public AccountController(AccountService accountService){
