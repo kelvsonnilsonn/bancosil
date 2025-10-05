@@ -1,9 +1,9 @@
 package com.github.bancosil.controller;
 
+import com.github.bancosil.dto.operation.DepositDTO;
+import com.github.bancosil.dto.operation.TransferDTO;
+import com.github.bancosil.dto.operation.WithdrawDTO;
 import com.github.bancosil.util.HttpConstants;
-import com.github.bancosil.dto.DepositDTO;
-import com.github.bancosil.dto.TransferDTO;
-import com.github.bancosil.dto.WithdrawDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
