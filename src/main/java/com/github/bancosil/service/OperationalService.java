@@ -1,10 +1,10 @@
 package com.github.bancosil.service;
 
-import com.github.bancosil.config.AccountConfigurations;
-import com.github.bancosil.exception.account.UnauthorizedException;
+import com.github.bancosil.exception.operational.NegativeOperationException;
 import com.github.bancosil.exception.operational.SelfTransferException;
 import com.github.bancosil.model.Account;
 import com.github.bancosil.service.operation.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,29 +14,23 @@ import java.util.function.Supplier;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class OperationalService {
 
     private final LogService logService;
     private final AccountService accountService;
-    private final AccountConfigurations accountConfigurations;
-
-
-    public OperationalService(LogService logService, AccountService accountService, AccountConfigurations accountConfigurations){
-        this.logService = logService;
-        this.accountService = accountService;
-        this.accountConfigurations = accountConfigurations;
-    }
+    private final AuthenticationInformation authenticationInformation;
 
     public void withdraw(BigDecimal amount){
-        executeOperation(Withdraw::new, getCurrentUser(), amount);
+        executeOperation(Withdraw::new, getAuthenticatedUser(), amount);
     }
 
     public void deposit(BigDecimal amount){
-        executeOperation(Deposit::new,  getCurrentUser(), amount);
+        executeOperation(Deposit::new,  getAuthenticatedUser(), amount);
     }
 
     public void transferPix(Account receiver, BigDecimal amount){
-        Account sender = getCurrentUser();
+        Account sender = getAuthenticatedUser();
         if(Objects.equals(sender.getId(), receiver.getId())){
             throw new SelfTransferException("Você não pode transferir para si mesmo");
         }
@@ -44,6 +38,7 @@ public class OperationalService {
     }
 
     private void executeOperation(Supplier<Operation> operationSupplier, Account account, BigDecimal amount){
+        validate(amount);
         Operation operation = operationSupplier.get();
         operation.execute(account, amount);
         accountService.update(account);
@@ -51,16 +46,20 @@ public class OperationalService {
     }
 
     private void executeTransfer(Supplier<TransferOperation> operationSupplier, Account sender, Account receiver, BigDecimal amount){
+        validate(amount);
         TransferOperation operation = operationSupplier.get();
         operation.execute(sender, receiver, amount);
         accountService.update(sender, receiver);
         logService.register(operation.operationType(), sender, receiver, amount);
     }
 
-    private Account getCurrentUser(){
-        if(!accountConfigurations.isLogged()){
-            throw new UnauthorizedException();
+    private Account getAuthenticatedUser(){
+        return authenticationInformation.getAuthenticatedUser();
+    }
+
+    private void validate(BigDecimal amount){
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new NegativeOperationException();
         }
-        return accountConfigurations.getCurrentUser();
     }
 }
