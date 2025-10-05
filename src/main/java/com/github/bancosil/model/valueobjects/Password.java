@@ -6,6 +6,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -23,21 +24,20 @@ public class Password {
     private static final Pattern pattern = Pattern.compile(PASSWORD_REGEX);
 
     public Password(String password){
-        this.password = validate(password);
+        this.password = password;
     }
 
-    public static Password of(String password){
-        return new Password(password);
+    public static Password of(String password, PasswordEncoder encoder){
+        validate(password);
+        return new Password(encoder.encode(password));
     }
 
-    private String validate(String password){
-        Objects.requireNonNull(password);
+    private static void validate(String password){
         if(password.length() < 6){
             throw new ShortPasswordException();
         }
         if(!pattern.matcher(password).matches()){
             throw new InvalidPasswordException();
         }
-        return password;
     }
 }
