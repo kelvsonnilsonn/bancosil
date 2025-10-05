@@ -31,7 +31,6 @@ public class Email {
     }
 
     private String validate(String email){
-        Objects.requireNonNull(email, "O Email não pode ser nulo.");
         if(!pattern.matcher(email).matches()){
             throw new InvalidEmailException();
         }
