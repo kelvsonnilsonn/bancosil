@@ -1,5 +1,6 @@
 package com.github.bancosil.service;
 
+import com.github.bancosil.dto.operation.TransferDTO;
 import com.github.bancosil.exception.operational.NegativeOperationException;
 import com.github.bancosil.exception.operational.SelfTransferException;
 import com.github.bancosil.model.Account;
@@ -29,12 +30,13 @@ public class OperationalService {
         executeOperation(Deposit::new,  getAuthenticatedUser(), amount);
     }
 
-    public void transferPix(Account receiver, BigDecimal amount){
+    public void transferPix(TransferDTO dto){
+        Account receiver = accountService.findEntityById(dto.id());
         Account sender = getAuthenticatedUser();
         if(Objects.equals(sender.getId(), receiver.getId())){
             throw new SelfTransferException("Você não pode transferir para si mesmo");
         }
-        executeTransfer(TransferPix::new, sender, receiver, amount);
+        executeTransfer(TransferPix::new, sender, receiver, dto.amount());
     }
 
     private void executeOperation(Supplier<Operation> operationSupplier, Account account, BigDecimal amount){
