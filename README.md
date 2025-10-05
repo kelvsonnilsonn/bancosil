@@ -1,43 +1,63 @@
 # Bancosil 🏦 - Sistema Bancário em Spring Boot
-API REST bancária construída com **Spring Boot**, que oferece funcionalidades básicas para gerenciamento de contas bancárias.
+
+API REST bancária completa construída com **Spring Boot 3**, oferecendo sistema completo de autenticação JWT, operações financeiras seguras e validações robustas para gerenciamento de contas bancárias.
 
 ---
 
 ## 📋 Status do Projeto
-✅ **Concluído**: Sistema completo com autenticação, operações financeiras, validações robustas e tratamento de erros.
+✅ **Concluído**: Sistema completo com autenticação JWT, operações financeiras, validações com Value Objects e tratamento de exceções personalizado.
 
-🚀 **Em produção**: Pronto para uso com arquitetura escalável e documentação completa.
+🚀 **Pronto para Produção**: Arquitetura escalável com Spring Security, documentação OpenAPI e suporte a múltiplos bancos de dados.
+
+🔒 **Seguro**: Autenticação stateless com tokens JWT, senhas criptografadas com BCrypt e endpoints protegidos.
 
 ---
 
-## ✨ Funcionalidades Implementadas
-### Sistema de Autenticação
-Endpoints REST para login e logout de usuários.
+# ✨ Funcionalidades Implementadas
 
-### Endpoints da API
-#### 👥 Autenticação (/auth)
-- `POST /auth/login` - Autentica um usuário
-- `POST /auth/logout` - Desloga o usuário atual
+## Endpoints da API
+### 👥 Autenticação (/auth) - PÚBLICO
+- `POST /auth/login` - Autentica um usuário e retorna JWT token
+- `POST /auth/register` - Registra novo usuário e retorna JWT token
 
-#### 💳 Gestão de Contas (/accounts)
-- `POST /accounts/create` - Cria uma nova conta
-- `GET /accounts/{id}` - Busca uma conta por ID
-- `GET /accounts/search?username={username}&page={page}&size={size}` - Busca contas por nome de usuário (paginação)
-- `GET /accounts?page={page}&size={size}` - Lista todas as contas (paginação)
+### 💰 Operações Financeiras (/operation) - PROTEGIDO
+- `POST /operation/deposit` - Realiza depósito na conta do usuário logado
+- `POST /operation/withdraw` - Realiza saque na conta do usuário logado
+- `POST /operation/transfer` - Realiza transferência PIX entre contas
+
+### 👤 Gestão de Contas (/accounts) - PROTEGIDO
+- `GET /accounts/{id}` - Busca conta por ID
+- `GET /accounts/search?username={username}` - Busca conta por username
+- `GET /accounts` - Lista todas as contas (paginação)
 - `DELETE /accounts/{id}` - Deleta uma conta
-
-#### 💰 Operações Financeiras (/operation)
-- `POST /operation/deposit` - Realiza um depósito na conta do usuário logado
-- `POST /operation/withdraw` - Realiza um saque na conta do usuário logado
-- `POST /operation/transfer` - Realiza uma transferência PIX entre contas
-
-### Tipos de Conta
-- Conta Corrente (`Corrente`)
 
 ### Gerenciamento de Dados
 - Cadastro de usuários: Endpoints para cadastro e busca de contas
 -Validação de dados: Uso de Value Objects para validar atributos como CPF, e-mail e endereço
 -Paginação: Sistema completo de paginação em consultas de listagem
+
+---
+
+## 🔐 Sistema de Segurança JWT
+
+### Autenticação
+- **JWT Tokens** com expiração de 2 horas
+- **Spring Security 6** com configuração personalizada
+- **BCrypt** para hash de senhas
+- **Stateless** - sem sessões no servidor
+
+### Proteção de Endpoints
+- ✅ **Públicos**: `/auth/*`, `/h2-console/**`, `/swagger-ui/**`
+- 🔒 **Protegidos**: Todos os demais endpoints
+- **Header obrigatório**: `Authorization: Bearer {token}`
+
+### Componentes de Segurança
+- `SecurityFilter` - Valida tokens JWT
+- `CustomUserDetailsService` - Integração com entidade Account
+- `TokenService` - Geração e validação de tokens
+- `SecurityConfig` - Configuração do Spring Security
+
+---
 
 ## 💰 Sistema de Operações Financeiras
 
@@ -51,6 +71,8 @@ Endpoints REST para login e logout de usuários.
 - `OperationType` enum para categorizar operações
 - Registro de autor, receptor, valor e timestamp
 
+---
+
 ## 🔒 Tratamento de Exceções Personalizadas
 
 ### Exceções Específicas Implementadas:
@@ -61,59 +83,91 @@ Endpoints REST para login e logout de usuários.
 - `NegativeOperationException` - Valores negativos em operações (400)
 - `InvalidCPFNumberException` - CPF inválido (400)
 - `InvalidEmailException` - E-mail inválido (400)
+- `ShortUsernameException` - Nome de usuário muito curto (400)
+- `InvalidPasswordException` - Senha não atende aos requisitos (400)
+- `ShortPasswordException` - Senha muito curta (400)
+- `AccountAlreadyExistsException` - Conta já existe (400)
+- `FailedLoginAttemptException` - Falha no login (400)
+- `DataIntegrityViolationException` - Dados duplicados (409)
 
 ### Handler Global
 - `@RestControllerAdvice` centralizando tratamento de erros
 - Respostas HTTP apropriadas para cada tipo de exceção
+- Mensagens claras e específicas para o usuário
+- 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
-- **Spring Boot 3.5.5**
+- **Spring Boot 3.5.6**
+- **Spring Security 6** + JWT
 - **Spring Data JPA**
-- **Lombok**
-- **H2 Database** (dev)
-- **MySQL** (prod)
+- **H2 Database** (desenvolvimento)
+- **MySQL** (produção)
 - **OpenAPI 3** (Swagger UI)
-- **Maven**
+- **Lombok** - Redução de boilerplate
+- **MapStruct** - Mapeamento entre DTOs e Entidades
+- **Maven** - Gerenciamento de dependências
+- **Java 21**
+- 
 ---
 
 ## 🏗️ Arquitetura e Padrões Implementados
 
 ### 🔷 Padrões de Projeto
+- **JWT Authentication Pattern**: Autenticação stateless com tokens
+- **Filter Chain Pattern**: Interceptação de requisições com SecurityFilter
 - **Strategy Pattern**: Operações bancárias (Deposit, Withdraw, Transfer)
 - **Factory Method**: Criação dinâmica de operações
 - **DTO Pattern**: Segurança na transferência de dados
 - **Value Objects**: Validação de CPF, e-mail, senha e username
 
-### 📊 Sistema de Paginação
-- Implementação de `PageResponseDTO` para consultas paginadas
-- Parâmetros `page` e `size` em endpoints de listagem
-- Ordenação por username nas consultas
+---
+
+### 📊 Sistema de Consultas
+
+#### Endpoints de Busca
+- `GET /accounts/{id}` - Busca conta por ID
+- `GET /accounts/search?username={username}` - Busca conta por username (exato)
+- `GET /accounts` - Lista todas as contas
+
+---
 
 ## 📦 Estrutura do Projeto
 ```text
 src/
 ├── main/
 │   ├── java/com/github/bancosil/
-│   │   ├── config/           # Configurações globais
 │   │   ├── controller/       # Endpoints REST + interfaces
 │   │   ├── dto/              # Data Transfer Objects  
-│   │   ├── model/            # Entidades + Value Objects
-│   │   ├── repository/       # JPA Repositories
-│   │   ├── service/          # Lógica de negócio
-│   │   ├── service/operation/# Operações bancárias (Strategy)
+│   │   ├── enums/            # Classes de enumerações
+│   │   ├── exceptions/       # Exceções personalizadas
 │   │   ├── handler/          # Tratamento global de exceções
 │   │   ├── mapper/           # Conversores DTO/Entity
+│   │   ├── model/            # Entidades + Value Objects
+│   │   ├── repository/       # JPA Repositories
+│   │   ├── security/         # Configurações de segurança JWT
+│   │   ├── service/          # Lógica de negócio
+│   │   ├── service/operation/# Operações bancárias (Strategy)
 │   │   └── util/             # Constantes e utilitários
 │   └── resources/            # Configurações
 ```
 
+---
+
 ## 📝 Modelo de Dados
 ### Entidades Principais:
-- `Account`: Entidade abstrata que representa uma conta bancária.
-    - `Herança`: Estratégia SINGLE_TABLE com DiscriminatorColumn para diferenciar os tipos de conta (Corrente, Poupanca, Investimento).
-
+- `Account`: Entidade que representa uma conta bancária.
 - `Log`: Registra todas as operações financeiras.
+
+---
+
+### Tipos de Conta  
+- Conta Corrente (`CORRENTE`)
+- Conta Poupança (`POUPANCA`)
+- Conta Investimento (`INVESTIMENTO`)
+- Conta Admin (`ADMIN`)
+- 
+---
 
 ### Atributos:
 - `id`
@@ -123,6 +177,8 @@ src/
 - `CPF` (Value Object, com validação e restrição de unicidade)
 - `Address` (Value Object)
 - `Money` (BigDecimal)
+
+---
 
 ## 🔧 Configuração
 ### Banco de Dados
@@ -157,19 +213,33 @@ mvn spring-boot:run
 ## Documentação Interativa
 - Swagger UI: http://localhost:8080/swagger-ui.html
 
-## 📋 Exemplos de Uso
-### Criar Conta
-- `POST /accounts/create`
+# 📋 Exemplos de Uso
+
+## 🔑 Exemplos de Autenticação
+
+### 1. Obter Token
 ```bash
+POST /auth/login
+{
+    "username": "admin",
+    "password": "admin"
+}
+```
+
+### Criar Conta
+```bash
+POST /auth/register
 {
     "username": "joao.silva",
-    "email": "joao@email.com",
-    "password": "senha123",
-    "cpf": "123.456.789-00"
+    "email": "joao@email.com", 
+    "password": "Senha123!",
+    "cpf": "123.456.789-00",
+    "type": "CORRENTE"
+}
 }
 ```
 ### Buscar Contas com Paginação
-- `GET /accounts/search?username=joao&page=0&size=10`
+- `GET /accounts/search?username=joao`
 
 ### Realizar Transferência
 - `POST /operation/transfer`
