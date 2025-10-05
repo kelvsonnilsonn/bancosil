@@ -1,9 +1,9 @@
 package com.github.bancosil.controller;
 
-import com.github.bancosil.dto.AccountResponseDTO;
+import com.github.bancosil.dto.auth.AuthResponseDTO;
+import com.github.bancosil.dto.auth.LoginRequestDTO;
+import com.github.bancosil.dto.auth.RegisterRequestDTO;
 import com.github.bancosil.util.HttpConstants;
-import com.github.bancosil.dto.AccountRequestDTO;
-import com.github.bancosil.dto.LoginDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,11 +18,10 @@ public interface AuthAPI {
     @ApiResponse(responseCode = HttpConstants.UNAUTHORIZED, description = "Credenciais inválidas")
     @ApiResponse(responseCode = HttpConstants.BAD_REQUEST, description = HttpConstants.BAD_REQUEST_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<AccountResponseDTO> login(@RequestBody LoginDTO loginDTO);
+    ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO);
 
-    @Operation(summary = "Logout de usuário", description = "Desconecta um usuário do sistema")
-    @ApiResponse(responseCode = HttpConstants.OK, description = "Logout realizado com sucesso")
-    @ApiResponse(responseCode = HttpConstants.UNAUTHORIZED, description = HttpConstants.UNAUTHORIZED_MSG)
+    @Operation(summary = "Registrar usuário", description = "Registra um usuário no sistema")
+    @ApiResponse(responseCode = HttpConstants.OK, description = "Registrado com sucesso")
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<String> logout();
+    ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO registerRequestDTO);
 }
