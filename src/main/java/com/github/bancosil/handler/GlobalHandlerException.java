@@ -1,5 +1,7 @@
 package com.github.bancosil.handler;
 
+import com.github.bancosil.exception.AccountAlreadyExistsException;
+import com.github.bancosil.exception.FailedLoginAttemptException;
 import com.github.bancosil.exception.account.AccountNotFoundException;
 import com.github.bancosil.exception.account.UnauthorizedException;
 import com.github.bancosil.exception.operational.NegativeOperationException;
@@ -84,6 +86,18 @@ public class GlobalHandlerException {
 
     @ExceptionHandler(SelfTransferException.class)
     public ResponseEntity<String> handleOperationException(SelfTransferException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(AccountAlreadyExistsException.class)
+    public ResponseEntity<String> handleOperationException(AccountAlreadyExistsException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(FailedLoginAttemptException.class)
+    public ResponseEntity<String> handleOperationException(FailedLoginAttemptException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
     }
