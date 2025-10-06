@@ -26,7 +26,7 @@ public interface LogAPI {
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
     ResponseEntity<PageResponseDTO<LogResponseDTO>> findAuthorLogs(Pageable pageable, @RequestParam Long id);
 
-    @Operation(summary = "Listar logs de usuário", description = "Lista todos os logs de um usuário.")
+    @Operation(summary = "Listar logs por intervalo", description = "Lista logs dentro de um intervalo específico.")
     @ApiResponse(responseCode = HttpConstants.OK, description = "Logs listados com sucesso")
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
     ResponseEntity<PageResponseDTO<LogResponseDTO>> findByInterval(Pageable pageable, @RequestBody @Valid DateIntervalDTO dateInterval);
