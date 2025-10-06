@@ -1,4 +1,7 @@
 # Bancosil 🏦 - Sistema Bancário em Spring Boot
+![Java](https://img.shields.io/badge/Java-21-red)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-green)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-6-blue)
 
 API REST bancária completa construída com **Spring Boot 3**, oferecendo sistema completo de autenticação JWT, operações financeiras seguras e validações robustas para gerenciamento de contas bancárias.
 
@@ -15,6 +18,13 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 
 # ✨ Funcionalidades Implementadas
 
+### 🔍 Sistema de Rastreabilidade
+- **Registro automático**: Todas as operações financeiras são automaticamente logadas
+- **Auditoria completa**: Histórico de depósitos, saques e transferências
+- **Controle de acesso**: Logs restritos por permissões (admin vs usuário)
+- **Busca temporal**: Filtros por intervalo de datas com validação
+- **Segurança**: Validação de autorização para acessar logs de outros usuários
+
 ## Endpoints da API
 ### 👥 Autenticação (/auth) - PÚBLICO
 - `POST /auth/login` - Autentica um usuário e retorna JWT token
@@ -30,6 +40,13 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 - `GET /accounts/search?username={username}` - Busca conta por username
 - `GET /accounts` - Lista todas as contas (paginação)
 - `DELETE /accounts/{id}` - Deleta uma conta
+
+### 📊 Gestão de Logs (Protegido)
+| Método | Endpoint | Descrição | Códigos de Resposta |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/logs` | Listar todos os logs (Admin apenas) | 200, 403, 500 |
+| **GET** | `/logs/author?id={userId}` | Listar logs de um usuário específico | 200, 403, 500 |
+| **GET** | `/logs/interval` | Listar logs por intervalo de datas | 200, 400, 500 |
 
 ### Gerenciamento de Dados
 - Cadastro de usuários: Endpoints para cadastro e busca de contas
@@ -89,6 +106,7 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 - `AccountAlreadyExistsException` - Conta já existe (400)
 - `FailedLoginAttemptException` - Falha no login (400)
 - `DataIntegrityViolationException` - Dados duplicados (409)
+- `InvalidIntervalDateException` - Intervalo de datas inválido (400)
 
 ### Handler Global
 - `@RestControllerAdvice` centralizando tratamento de erros
@@ -215,6 +233,27 @@ mvn spring-boot:run
 
 # 📋 Exemplos de Uso
 
+### 💡 Novos Exemplos de Uso
+
+## Auditoria e Logs
+```bash
+# Visualizar todos os logs (apenas admin)
+GET /logs
+Authorization: Bearer {token-admin}
+
+# Visualizar meus próprios logs
+GET /logs/author?id=123
+Authorization: Bearer {token}
+
+# Buscar logs por intervalo de datas
+GET /logs/interval
+Authorization: Bearer {token-admin}
+{
+    "startDate": "01-10-2024T00:00:00",
+    "endDate": "31-10-2024T23:59:59"
+}
+```
+
 ## 🔑 Exemplos de Autenticação
 
 ### 1. Obter Token
@@ -250,3 +289,17 @@ POST /auth/register
   "id": 2
 }
 ```
+
+### 🔄 Mudanças Principais (Versão 1.7)
+
+#### ✅ Adicionado
+- **Sistema completo de logs** para auditoria de operações
+- **Serviço de rastreabilidade** com registro automático
+- **Controle de acesso granular** para visualização de logs
+- **Busca por intervalo temporal** com validação de datas
+
+#### 🎯 Aprimorado
+- **Transparência operacional** - histórico completo de transações
+- **Segurança** - validação de permissões para acesso a logs
+- **Conformidade** - sistema de auditoria para requisitos regulatórios
+- **Debugging** - ferramentas para análise de operações
