@@ -22,6 +22,8 @@ public class AppConstants {
 
     public static final String LOG_BASE_PATH = "/logs";
     public static final String AUTHOR_LOG_PATH = "/author";
+    public static final String INTERVAL_LOG_PATH = "/interval";
+
 
     // Parâmetros
 
