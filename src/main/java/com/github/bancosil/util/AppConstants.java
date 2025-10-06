@@ -20,6 +20,9 @@ public class AppConstants {
     public static final String WITHDRAW_PATH = "/withdraw";
     public static final String TRANSFER_PATH = "/transfer";
 
+    public static final String LOG_BASE_PATH = "/logs";
+    public static final String AUTHOR_LOG_PATH = "/author";
+
     // Parâmetros
 
     public static final String USERNAME_PARAM = "username";
