@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -52,6 +54,12 @@ public class LogService {
             throw new UnauthorizedException();
         }
         Page<LogResponseDTO> logs = logRepository.findByAuthorId(pageable, authorId).map(logMapper::toResponse);
+        return PageResponseDTO.fromPage(logs);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<LogResponseDTO> findByInterval(Pageable pageable, LocalDateTime startDate, LocalDateTime endDate){
+        Page<LogResponseDTO> logs = logRepository.findByInterval(pageable, startDate, endDate).map(logMapper::toResponse);
         return PageResponseDTO.fromPage(logs);
     }
 
