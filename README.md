@@ -49,9 +49,9 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 | **GET** | `/logs/interval` | Listar logs por intervalo de datas | 200, 400, 500 |
 
 ### Gerenciamento de Dados
-- Cadastro de usuários: Endpoints para cadastro e busca de contas
--Validação de dados: Uso de Value Objects para validar atributos como CPF, e-mail e endereço
--Paginação: Sistema completo de paginação em consultas de listagem
+- `Cadastro de usuários`: Endpoints para cadastro e busca de contas
+- `Validação de dados`: Uso de Value Objects para validar atributos como CPF, e-mail e endereço
+- `Paginação`: Sistema completo de paginação em consultas de listagem
 
 ---
 
@@ -112,7 +112,7 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 - `@RestControllerAdvice` centralizando tratamento de erros
 - Respostas HTTP apropriadas para cada tipo de exceção
 - Mensagens claras e específicas para o usuário
-- 
+
 ---
 
 ## 🛠️ Tecnologias Utilizadas
@@ -126,7 +126,7 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 - **MapStruct** - Mapeamento entre DTOs e Entidades
 - **Maven** - Gerenciamento de dependências
 - **Java 21**
-- 
+
 ---
 
 ## 🏗️ Arquitetura e Padrões Implementados
@@ -184,7 +184,7 @@ src/
 - Conta Poupança (`POUPANCA`)
 - Conta Investimento (`INVESTIMENTO`)
 - Conta Admin (`ADMIN`)
-- 
+
 ---
 
 ### Atributos:
