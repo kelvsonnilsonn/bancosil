@@ -10,6 +10,8 @@ public class AppConstants {
     public static final String ACCOUNT_BASE_PATH = "/accounts";
     public static final String ID_PATH = "/{id}";
     public static final String SEARCH_PATH = "/search";
+    public static final String ADMIN_PATH = "/admin";
+
 
     public static final String AUTH_BASE_PATH = "/auth";
     public static final String LOGIN_PATH = "/login";
@@ -35,5 +37,8 @@ public class AppConstants {
     public static final String DEPOSIT_MSG = "Operação de deposito realizada com sucesso";
     public static final String WITHDRAW_MSG = "Operação de saque realizada com sucesso";
     public static final String TRANSFER_MSG = "Operação de transferência realizada com sucesso";
+
+    public static final String PRE_AUTHORIZE_ADMIN_REQUISITION = "hasAuthority('ADMIN_ROLE')";
+    public static final String PRE_AUTHORIZE_ALL_REQUISITION = "permitAll()";
 
 }
