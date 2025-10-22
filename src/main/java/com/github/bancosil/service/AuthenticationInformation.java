@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-class AuthenticationInformation {
+public class AuthenticationInformation {
 
     public Account getAuthenticatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
