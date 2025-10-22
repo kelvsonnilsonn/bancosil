@@ -4,6 +4,7 @@ import com.github.bancosil.command.account.CreateAccountCommand;
 import com.github.bancosil.dto.AuthResponseDTO;
 import com.github.bancosil.command.auth.LoginCommand;
 import com.github.bancosil.enums.AccountType;
+import com.github.bancosil.event.account.CreateAccountEvent;
 import com.github.bancosil.exception.AccountAlreadyExistsException;
 import com.github.bancosil.exception.FailedLoginAttemptException;
 import com.github.bancosil.exception.account.AccountNotFoundException;
@@ -15,6 +16,7 @@ import com.github.bancosil.model.valueobjects.account.Username;
 import com.github.bancosil.model.valueobjects.cpfchecker.CPF;
 import com.github.bancosil.repository.AccountRepository;
 import com.github.bancosil.security.TokenService;
+import com.github.bancosil.util.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class SecurityService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final EventStoreService eventStoreService;
 
     @Transactional(readOnly = true)
     public AuthResponseDTO login(LoginCommand dto){
@@ -47,8 +50,10 @@ public class SecurityService {
             throw new AccountAlreadyExistsException();
         }
         Account newAccount = createAccount(command);
-        accountRepository.save(newAccount);
+        Account savedAccount = accountRepository.save(newAccount);
         String token = tokenService.generateToken(newAccount);
+        CreateAccountEvent event = new CreateAccountEvent(savedAccount.getId(), newAccount.getUsername());
+        eventStoreService.saveEvent(AppConstants.ACCOUNT, savedAccount.getId(), event);
         return new AuthResponseDTO(token, newAccount.getUsername());
     }
 
