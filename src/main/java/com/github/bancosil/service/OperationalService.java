@@ -1,10 +1,11 @@
 package com.github.bancosil.service;
 
-import com.github.bancosil.dto.operation.TransferDTO;
-import com.github.bancosil.exception.operational.NegativeOperationException;
+import com.github.bancosil.command.operation.TransferCommand;
 import com.github.bancosil.exception.operational.SelfTransferException;
 import com.github.bancosil.model.Account;
+import com.github.bancosil.service.command.AccountCommandService;
 import com.github.bancosil.service.operation.*;
+import com.github.bancosil.service.query.AccountQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +19,8 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class OperationalService {
 
-    private final LogService logService;
-    private final AccountService accountService;
+    private final AccountCommandService accountCommandService;
+    private final AccountQueryService accountQueryService;
     private final AuthenticationInformation authenticationInformation;
 
     public void withdraw(BigDecimal amount){
@@ -30,38 +31,28 @@ public class OperationalService {
         executeOperation(Deposit::new,  getAuthenticatedUser(), amount);
     }
 
-    public void transferPix(TransferDTO dto){
-        Account receiver = accountService.findEntityById(dto.id());
+    public void transferPix(TransferCommand dto){
+        Account receiver = accountQueryService.findEntityById(dto.id());
         Account sender = getAuthenticatedUser();
         if(Objects.equals(sender.getId(), receiver.getId())){
-            throw new SelfTransferException("Você não pode transferir para si mesmo");
+            throw new SelfTransferException();
         }
         executeTransfer(TransferPix::new, sender, receiver, dto.amount());
     }
 
     private void executeOperation(Supplier<Operation> operationSupplier, Account account, BigDecimal amount){
-        validate(amount);
         Operation operation = operationSupplier.get();
         operation.execute(account, amount);
-        accountService.update(account);
-        logService.register(operation.operationType(), account, amount);
+        accountCommandService.update(account);
     }
 
     private void executeTransfer(Supplier<TransferOperation> operationSupplier, Account sender, Account receiver, BigDecimal amount){
-        validate(amount);
         TransferOperation operation = operationSupplier.get();
         operation.execute(sender, receiver, amount);
-        accountService.update(sender, receiver);
-        logService.register(operation.operationType(), sender, receiver, amount);
+        accountCommandService.update(sender, receiver);
     }
 
     private Account getAuthenticatedUser(){
         return authenticationInformation.getAuthenticatedUser();
-    }
-
-    private void validate(BigDecimal amount){
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new NegativeOperationException();
-        }
     }
 }
