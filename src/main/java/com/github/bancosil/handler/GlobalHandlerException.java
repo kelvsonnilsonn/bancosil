@@ -21,6 +21,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalHandlerException {
 
+    @ExceptionHandler(InvalidIntervalDateException.class)
+    public ResponseEntity<String> handleInvalidDate(InvalidIntervalDateException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<String> handleAccountNotFound(AccountNotFoundException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
