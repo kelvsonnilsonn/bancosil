@@ -8,7 +8,7 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 ---
 
 ## 📋 Status do Projeto
-✅ **Concluído**: Sistema completo com autenticação JWT, operações financeiras, validações com Value Objects e tratamento de exceções personalizado.
+✅ **Em desenvolvimento**: Sistema completo com autenticação JWT, operações financeiras, validações com Value Objects e tratamento de exceções personalizado.
 
 🚀 **Pronto para Produção**: Arquitetura escalável com Spring Security, documentação OpenAPI e suporte a múltiplos bancos de dados.
 
