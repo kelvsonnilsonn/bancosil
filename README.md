@@ -26,27 +26,31 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 - **Segurança**: Validação de autorização para acessar logs de outros usuários
 
 ## Endpoints da API
+
 ### 👥 Autenticação (/auth) - PÚBLICO
-- `POST /auth/login` - Autentica um usuário e retorna JWT token
-- `POST /auth/register` - Registra novo usuário e retorna JWT token
+| Método | Endpoint | Descrição | Permissões |
+|:---|:---|:---|:---|
+| **POST** | `/auth/login` | Autentica um usuário e retorna JWT token | PÚBLICO |
+| **POST** | `/auth/register` | Registra novo usuário e retorna JWT token | PÚBLICO |
 
 ### 💰 Operações Financeiras (/operation) - PROTEGIDO
-- `POST /operation/deposit` - Realiza depósito na conta do usuário logado
-- `POST /operation/withdraw` - Realiza saque na conta do usuário logado
-- `POST /operation/transfer` - Realiza transferência PIX entre contas
+| Método | Endpoint | Descrição | Permissões |
+|:---|:---|:---|:---|
+| **POST** | `/operation/deposit` | Realiza depósito na conta do usuário logado | PROTEGIDO |
+| **POST** | `/operation/withdraw` | Realiza saque na conta do usuário logado | PROTEGIDO |
+| **POST** | `/operation/transfer` | Realiza transferência PIX entre contas | PROTEGIDO |
 
-### 👤 Gestão de Contas (/accounts) - PROTEGIDO
-- `GET /accounts/{id}` - Busca conta por ID
-- `GET /accounts/search?username={username}` - Busca conta por username
-- `GET /accounts` - Lista todas as contas (paginação)
-- `DELETE /accounts/{id}` - Deleta uma conta
-
-### 📊 Gestão de Logs (Protegido)
-| Método | Endpoint | Descrição | Códigos de Resposta |
-| :--- | :--- | :--- | :--- |
-| **GET** | `/logs` | Listar todos os logs (Admin apenas) | 200, 403, 500 |
-| **GET** | `/logs/author?id={userId}` | Listar logs de um usuário específico | 200, 403, 500 |
-| **GET** | `/logs/interval` | Listar logs por intervalo de datas | 200, 400, 500 |
+### 📈 Event Store (/events) - PROTEGIDO
+| Método | Endpoint | Descrição | Permissões |
+|:---|:---|:---|:---|
+| **GET** | `/events` | Meus eventos (usuário logado) | Todos usuários |
+| **POST** | `/events/my-events/interval` | Meus eventos por intervalo temporal | Todos usuários |
+| **GET** | `/admin/events` | Todos os eventos do sistema | Apenas Admin |
+| **POST** | `/admin/events/interval` | Eventos do sistema por intervalo | Apenas Admin |
+| **POST** | `/admin/events/user-events/interval` | Eventos de usuário específico por intervalo | Apenas Admin |
+| **GET** | `/admin/events/user/{userId}` | Eventos de um usuário específico | Apenas Admin |
+| **GET** | `/admin/events/aggregate/{aggregateId}` | Eventos de um aggregate específico | Apenas Admin |
+| **GET** | `/admin/events/type/{aggregateType}` | Eventos por tipo de aggregate | Apenas Admin |
 
 ### Gerenciamento de Dados
 - `Cadastro de usuários`: Endpoints para cadastro e busca de contas
@@ -124,6 +128,7 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 - **OpenAPI 3** (Swagger UI)
 - **Lombok** - Redução de boilerplate
 - **MapStruct** - Mapeamento entre DTOs e Entidades
+- **Hypersistence Utils** - Suporte a JSON nativo no Hibernate
 - **Maven** - Gerenciamento de dependências
 - **Java 21**
 
@@ -132,21 +137,13 @@ API REST bancária completa construída com **Spring Boot 3**, oferecendo sistem
 ## 🏗️ Arquitetura e Padrões Implementados
 
 ### 🔷 Padrões de Projeto
+- **Event Sourcing**: Armazenamento de estado como sequência de eventos imutáveis
 - **JWT Authentication Pattern**: Autenticação stateless com tokens
 - **Filter Chain Pattern**: Interceptação de requisições com SecurityFilter
 - **Strategy Pattern**: Operações bancárias (Deposit, Withdraw, Transfer)
 - **Factory Method**: Criação dinâmica de operações
 - **DTO Pattern**: Segurança na transferência de dados
 - **Value Objects**: Validação de CPF, e-mail, senha e username
-
----
-
-### 📊 Sistema de Consultas
-
-#### Endpoints de Busca
-- `GET /accounts/{id}` - Busca conta por ID
-- `GET /accounts/search?username={username}` - Busca conta por username (exato)
-- `GET /accounts` - Lista todas as contas
 
 ---
 
@@ -158,6 +155,7 @@ src/
 │   │   ├── controller/       # Endpoints REST + interfaces
 │   │   ├── dto/              # Data Transfer Objects  
 │   │   ├── enums/            # Classes de enumerações
+│   │   ├── event/            # Event Store e Event Sourcing
 │   │   ├── exceptions/       # Exceções personalizadas
 │   │   ├── handler/          # Tratamento global de exceções
 │   │   ├── mapper/           # Conversores DTO/Entity
@@ -175,8 +173,16 @@ src/
 ## 📝 Modelo de Dados
 ### Entidades Principais:
 - `Account`: Entidade que representa uma conta bancária.
-- `Log`: Registra todas as operações financeiras.
-
+ 
+### Entidade Event Store:
+- `EventStore`: Armazena todos os eventos do sistema de forma imutável
+    - `id`: Identificador único do evento
+    - `aggregateType`: Tipo do aggregate (ACCOUNT, OPERATION, etc.)
+    - `accountId`: ID da conta relacionada ao evento
+    - `eventType`: Tipo específico do evento
+    - `eventData`: Dados do evento em formato JSON
+    - `createdAt`: Timestamp de criação do evento
+    - 
 ---
 
 ### Tipos de Conta  
@@ -290,16 +296,25 @@ POST /auth/register
 }
 ```
 
-### 🔄 Mudanças Principais (Versão 1.7)
+### 🔄 Mudanças Principais (Versão 2.0)
 
-#### ✅ Adicionado
-- **Sistema completo de logs** para auditoria de operações
-- **Serviço de rastreabilidade** com registro automático
-- **Controle de acesso granular** para visualização de logs
-- **Busca por intervalo temporal** com validação de datas
+#### ✅ Arquitetura Event Sourcing
+- **Event Store Completo**: Implementação completa do padrão Event Sourcing
+- **Armazenamento JSON**: Eventos armazenados em formato JSON nativo
+- **Consultas Temporais**: Busca avançada por intervalos de datas
+- **Separação de Concerns**: Eventos segregados por usuário e aggregate
 
-#### 🎯 Aprimorado
-- **Transparência operacional** - histórico completo de transações
-- **Segurança** - validação de permissões para acesso a logs
-- **Conformidade** - sistema de auditoria para requisitos regulatórios
-- **Debugging** - ferramentas para análise de operações
+#### ✅ Novos Endpoints
+- **API de Eventos**: Endpoints completos para consulta de eventos
+- **Controle de Acesso Granular**: Diferentes níveis de acesso para usuários e admins
+- **Filtros Avançados**: Busca por usuário, aggregate, tipo e intervalo temporal
+
+#### ✅ Aprimoramentos de Auditoria
+- **Rastreabilidade Total**: Capacidade de reconstruir qualquer estado passado
+- **Imutabilidade**: Eventos armazenados de forma permanente e imutável
+- **Transparência**: Visibilidade completa de todas as operações do sistema
+
+#### 🎯 Benefícios Adicionais
+- **Debugging Avançado**: Capacidade de reproduzir cenários específicos
+- **Business Intelligence**: Dados ricos para análise e tomada de decisão
+- **Resiliência**: Sistema mais robusto para recuperação de falhas
